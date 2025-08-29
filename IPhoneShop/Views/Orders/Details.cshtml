@@ -1,0 +1,18 @@
+﻿@model IPhoneShop.Models.Order
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = "_Layout";
+}
+<h2>Order Details</h2>
+
+<table>
+    <tr><th>Order ID</th><td>@Model.OrderId</td></tr>
+    <tr><th>Product ID</th><td>@Model.ProductId</td></tr>
+    <tr><th>Quantity</th><td>@Model.Quantity</td></tr>
+    <tr><th>Status</th><td>@Model.Status</td></tr>
+    <tr><th>Order Date</th><td>@Model.OrderDate</td></tr>
+    <tr><th>Delivery Address</th><td>@Model.DeliveryAddress</td></tr>
+</table>
+<div style="margin-top:12px;">
+    <a class="btn" href="/Orders/MyOrders">Back</a>
+</div>

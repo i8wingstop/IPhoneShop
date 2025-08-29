@@ -1,0 +1,137 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - IPhoneShop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            margin: 0;
+            background: #f7f7f8;
+            color: #111;
+        }
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+        }
+
+        nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+            nav a {
+                text-decoration: none;
+                color: #111;
+                padding: 6px 10px;
+                border-radius: 8px;
+            }
+
+                nav a:hover {
+                    background: #f1f5f9;
+                }
+
+        .container {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+
+        form.inline {
+            display: inline;
+        }
+
+        .btn {
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            border-radius: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+            .btn:hover {
+                background: #f8fafc;
+            }
+
+        input, select {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .price {
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/Products/Browse">Browse</a>
+            @{
+                var cid = HttpContextAccessor.HttpContext?.Session.GetString("CustomerID") ?? "";
+                if (string.IsNullOrEmpty(cid))
+                {
+                    <a href="/Customers/Login">Login</a>
+                    <a href="/Customers/Register">Register</a>
+                }
+                else
+                {
+                    <a href="/Orders/MyOrders">Cart</a>
+                    <a href="/Customers/Logout">Logout</a>
+                }
+            }
+        </nav>
+    </header>
+    <div class="container">
+        @RenderBody()
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<IPhoneShop.Models.Product>
+@{
+    ViewData["Title"] = "Browse Products";
+    Layout = "_Layout";
+}
+<h2>Browse Products</h2>
+
+@if (TempData["OrderError"] != null)
+{
+    <p style="color:#b91c1c">@TempData["OrderError"]</p>
+}
+
+<div class="grid">
+    @foreach (var p in Model)
+    {
+        <div class="card">
+            <div style="font-weight:600">@p.ProductName</div>
+            <div>@p.Colour • @p.Storage</div>
+            <div class="price">$@p.Price</div>
+
+            <form asp-controller="Orders" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="productId" value="@p.ProductId" />
+                <div>
+                    <label>Qty</label>
+                    <input type="number" name="qty" value="1" min="1" style="width:80px" />
+                </div>
+                <div style="margin-top:8px;">
+                    <label>Delivery Address</label><br />
+                    <input type="text" name="address" placeholder="e.g., 123 Orchard Road, Singapore" required style="width:100%" />
+                </div>
+                <div style="margin-top:10px; display:flex; gap:8px;">
+                    <button class="btn" type="submit" name="status" value="Saved">Save Order</button>
+                    <button class="btn" type="submit" name="status" value="Confirmed">Confirm Order</button>
+                </div>
+            </form>
+        </div>
+    }
+</div>

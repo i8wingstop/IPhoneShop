@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout";
+}
+<h2>Login</h2>
+
+<form asp-action="Login" method="post">
+    @Html.AntiForgeryToken()
+    <div>
+        <label>Customer ID</label><br />
+        <input type="text" name="customerId" required />
+    </div>
+    <div style="margin-top:8px;">
+        <label>Password</label><br />
+        <input type="password" name="password" required />
+    </div>
+    <div style="margin-top:12px;">
+        <button class="btn" type="submit">Login</button>
+        <a class="btn" href="/Customers/Register">Register</a>
+    </div>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <p style="color:#b91c1c;margin-top:12px;">@ViewBag.Error</p>
+}
