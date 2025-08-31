@@ -3,16 +3,236 @@
     ViewData["Title"] = "Order Details";
     Layout = "_Layout";
 }
-<h2>Order Details</h2>
 
-<table>
-    <tr><th>Order ID</th><td>@Model.OrderId</td></tr>
-    <tr><th>Product ID</th><td>@Model.ProductId</td></tr>
-    <tr><th>Quantity</th><td>@Model.Quantity</td></tr>
-    <tr><th>Status</th><td>@Model.Status</td></tr>
-    <tr><th>Order Date</th><td>@Model.OrderDate</td></tr>
-    <tr><th>Delivery Address</th><td>@Model.DeliveryAddress</td></tr>
-</table>
-<div style="margin-top:12px;">
-    <a class="btn" href="/Orders/MyOrders">Back</a>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Order Details</h1>
+                <p class="text-gray-600">View complete information about your order</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <a href="/Orders/MyOrders"
+                   class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Back to Cart
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Card -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden animate-fade-in">
+        <!-- Order Header -->
+        <div class="bg-gradient-to-r from-brand-500 to-brand-600 px-6 py-8 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">Order #@Model.OrderId</h2>
+                    <p class="text-brand-100">
+                        @if (Model.OrderDate != null)
+                        {
+                            <text>Ordered on @Model.OrderDate.ToString("MMMM dd, yyyy 'at' h:mm tt")</text>
+                        }
+                    </p>
+                </div>
+                <div class="text-right">
+                    @if (Model.Status == "Saved")
+                    {
+                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 8 8">
+                                <circle cx="4" cy="4" r="3" />
+                            </svg>
+                            Saved
+                        </span>
+                    }
+                    else if (Model.Status == "Confirmed")
+                    {
+                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 8 8">
+                                <circle cx="4" cy="4" r="3" />
+                            </svg>
+                            Confirmed
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 8 8">
+                                <circle cx="4" cy="4" r="3" />
+                            </svg>
+                            @Model.Status
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Information -->
+        <div class="p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Product Information -->
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4-8-4m16 0v10l-8 4-8-4V7"></path>
+                            </svg>
+                            Product Information
+                        </h3>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="flex items-center space-x-4">
+                                <!-- Product Image Placeholder -->
+                                <div class="w-16 h-16 bg-gradient-to-br from-brand-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z" />
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-600 mb-1">Product ID</div>
+                                    <div class="font-semibold text-gray-900">@Model.ProductId</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-md font-semibold text-gray-900 mb-3">Order Details</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span class="text-gray-600">Quantity</span>
+                                <span class="font-semibold text-gray-900">@Model.Quantity</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span class="text-gray-600">Status</span>
+                                <span class="font-semibold text-gray-900">@Model.Status</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2">
+                                <span class="text-gray-600">Order Date</span>
+                                <span class="font-semibold text-gray-900">
+                                    @if (Model.OrderDate != null)
+                                    {
+                                        @Model.OrderDate.ToString("MMM dd, yyyy")
+                                    }
+                                    else
+                                    {
+                                        <text>Not specified</text>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivery Information -->
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Delivery Information
+                        </h3>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="text-sm text-gray-600 mb-2">Delivery Address</div>
+                            <div class="font-medium text-gray-900 leading-relaxed">
+                                @if (!string.IsNullOrEmpty(Model.DeliveryAddress))
+                                {
+                                    @Model.DeliveryAddress
+                                }
+                                else
+                                {
+                                    <span class="text-gray-500 italic">No delivery address specified</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Status Timeline -->
+                    <div>
+                        <h4 class="text-md font-semibold text-gray-900 mb-3">Order Status</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                @if (Model.Status == "Saved" || Model.Status == "Confirmed" || Model.Status == "Delivered")
+                                {
+                                    <div class="w-4 h-4 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Order Created</div>
+                                        <div class="text-xs text-gray-500">Your order has been saved</div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="w-4 h-4 bg-gray-300 rounded-full mr-3 flex-shrink-0"></div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-500">Order Created</div>
+                                        <div class="text-xs text-gray-400">Pending</div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="flex items-center">
+                                @if (Model.Status == "Confirmed" || Model.Status == "Delivered")
+                                {
+                                    <div class="w-4 h-4 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Order Confirmed</div>
+                                        <div class="text-xs text-gray-500">Ready for processing</div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="w-4 h-4 bg-gray-300 rounded-full mr-3 flex-shrink-0"></div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-500">Order Confirmed</div>
+                                        <div class="text-xs text-gray-400">Pending</div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="flex items-center">
+                                @if (Model.Status == "Delivered")
+                                {
+                                    <div class="w-4 h-4 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Delivered</div>
+                                        <div class="text-xs text-gray-500">Order completed</div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="w-4 h-4 bg-gray-300 rounded-full mr-3 flex-shrink-0"></div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-500">Delivered</div>
+                                        <div class="text-xs text-gray-400">Pending</div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        @if (Model.Status == "Saved")
+        {
+            <div class="border-t border-gray-200 px-6 py-4 bg-gray-50">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        This order is saved but not yet confirmed. You can still make changes.
+                    </div>
+                    <div class="flex space-x-3">
+                        <a href="/Orders/MyOrders"
+                           class="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                            Edit Order
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

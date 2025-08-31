@@ -3,37 +3,140 @@
     ViewData["Title"] = "Browse Products";
     Layout = "_Layout";
 }
-<h2>Browse Products</h2>
 
-@if (TempData["OrderError"] != null)
-{
-    <p style="color:#b91c1c">@TempData["OrderError"]</p>
-}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Browse Products</h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            Discover the latest iPhone models with cutting-edge technology and premium design
+        </p>
+    </div>
 
-<div class="grid">
-    @foreach (var p in Model)
+    <!-- Error Message -->
+    @if (TempData["OrderError"] != null)
     {
-        <div class="card">
-            <div style="font-weight:600">@p.ProductName</div>
-            <div>@p.Colour • @p.Storage</div>
-            <div class="price">$@p.Price</div>
+        <div class="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg animate-slide-up max-w-md mx-auto">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-red-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <p class="text-red-700 font-medium">@TempData["OrderError"]</p>
+            </div>
+        </div>
+    }
 
-            <form asp-controller="Orders" asp-action="Create" method="post">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="productId" value="@p.ProductId" />
-                <div>
-                    <label>Qty</label>
-                    <input type="number" name="qty" value="1" min="1" style="width:80px" />
+    <!-- Products Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        @foreach (var p in Model)
+        {
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl card-hover overflow-hidden group">
+                <!-- Product Image -->
+                <div class="relative bg-gradient-to-br from-gray-50 to-gray-100 h-64 flex items-center justify-center overflow-hidden">
+                    <!-- Product image -->
+                    <img src="/images/IPhone_15.png"
+                         alt="@p.ProductName"
+                         class="w-40 h-40 object-contain group-hover:scale-110 transition-transform duration-300" />
+
+                    <!-- Premium badge -->
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-brand-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            NEW
+                        </span>
+                    </div>
                 </div>
-                <div style="margin-top:8px;">
-                    <label>Delivery Address</label><br />
-                    <input type="text" name="address" placeholder="e.g., 123 Orchard Road, Singapore" required style="width:100%" />
+
+                <!-- Product Details -->
+                <div class="p-6">
+                    <div class="mb-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-brand-600 transition-colors">
+                            @p.ProductName
+                        </h3>
+                        <p class="text-gray-600 mb-3">@p.Colour • @p.Storage</p>
+                        <div class="text-2xl font-bold text-brand-600">$@p.Price</div>
+                    </div>
+
+                    <!-- Order Form -->
+                    <form asp-controller="Orders" asp-action="Create" method="post" class="space-y-4">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="productId" value="@p.ProductId" />
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="qty_@p.ProductId" class="block text-sm font-semibold text-gray-700 mb-1">Quantity</label>
+                                <select name="qty"
+                                        id="qty_@p.ProductId"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <div class="text-sm text-gray-600">
+                                    <span class="font-semibold">Total: </span>
+                                    <span class="font-bold text-brand-600">$<span id="total_@p.ProductId">@p.Price</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="address_@p.ProductId" class="block text-sm font-semibold text-gray-700 mb-1">Delivery Address</label>
+                            <input type="text"
+                                   name="address"
+                                   id="address_@p.ProductId"
+                                   placeholder="123 Orchard Road, Singapore"
+                                   required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm placeholder-gray-400" />
+                        </div>
+
+                        <div class="flex space-x-2 pt-2">
+                            <button type="submit"
+                                    name="status"
+                                    value="Saved"
+                                    class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm border border-gray-300 hover:border-gray-400">
+                                Save Order
+                            </button>
+                            <button type="submit"
+                                    name="status"
+                                    value="Confirmed"
+                                    class="flex-1 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 text-sm shadow-md hover:shadow-lg">
+                                Order Now
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div style="margin-top:10px; display:flex; gap:8px;">
-                    <button class="btn" type="submit" name="status" value="Saved">Save Order</button>
-                    <button class="btn" type="submit" name="status" value="Confirmed">Confirm Order</button>
-                </div>
-            </form>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-16">
+            <svg class="w-24 h-24 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+            </svg>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">No Products Available</h3>
+            <p class="text-gray-500">Check back later for new arrivals!</p>
         </div>
     }
 </div>
+
+<script>
+    // Dynamic price calculation
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('select[name="qty"]').forEach(function(select) {
+            const productId = select.id.split('_')[1];
+            const basePrice = parseFloat(select.closest('.bg-white').querySelector('.text-2xl.font-bold').textContent.replace('$', ''));
+            const totalSpan = document.getElementById('total_' + productId);
+
+            select.addEventListener('change', function() {
+                const quantity = parseInt(this.value);
+                const total = (basePrice * quantity).toFixed(2);
+                totalSpan.textContent = total;
+            });
+        });
+    });
+</script>

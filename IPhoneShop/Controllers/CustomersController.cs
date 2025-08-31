@@ -18,13 +18,12 @@ namespace IPhoneShop.Controllers
         [HttpGet]
         public IActionResult Register() => View();
 
-        // POST: /Customers/Register  (Raw SQL Insert)
+        // POST: /Customers/Register  (Auto-generate CustomerID)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(string customerId, string firstName, string lastName, string email, string password, string phoneNumber)
+        public IActionResult Register(string firstName, string lastName, string email, string password, string phoneNumber)
         {
-            if (string.IsNullOrWhiteSpace(customerId) ||
-                string.IsNullOrWhiteSpace(firstName) ||
+            if (string.IsNullOrWhiteSpace(firstName) ||
                 string.IsNullOrWhiteSpace(lastName) ||
                 string.IsNullOrWhiteSpace(email) ||
                 string.IsNullOrWhiteSpace(password) ||
@@ -34,13 +33,50 @@ namespace IPhoneShop.Controllers
                 return View();
             }
 
+            // Check if email already exists
+            var existingCustomer = _context.Customers
+                .FromSqlRaw("SELECT * FROM Customer WHERE Email = {0}", email.Trim())
+                .AsEnumerable()
+                .FirstOrDefault();
+
+            if (existingCustomer != null)
+            {
+                ViewBag.Error = "An account with this email address already exists.";
+                return View();
+            }
+
+            // Auto-generate CustomerID
+            string newCustomerId = GenerateCustomerId();
+
             // Insert with parameters
             _context.Database.ExecuteSqlRaw(
                 "INSERT INTO Customer (CustomerID, FirstName, LastName, Email, Password, PhoneNumber) VALUES ({0}, {1}, {2}, {3}, {4}, {5})",
-                customerId.Trim(), firstName.Trim(), lastName.Trim(), email.Trim(), password.Trim(), phoneNumber.Trim()
+                newCustomerId, firstName.Trim(), lastName.Trim(), email.Trim(), password.Trim(), phoneNumber.Trim()
             );
 
             return RedirectToAction("Login");
+        }
+
+        // Helper method to generate unique CustomerID
+        private string GenerateCustomerId()
+        {
+            // Get the highest existing CustomerID number (looking for S prefix)
+            var existingIds = _context.Customers
+                .FromSqlRaw("SELECT * FROM Customer")
+                .AsEnumerable()
+                .Select(c => c.CustomerId)
+                .Where(id => id.StartsWith("S") && id.Length == 4)
+                .Select(id => {
+                    if (int.TryParse(id.Substring(1), out int num))
+                        return num;
+                    return 0;
+                })
+                .DefaultIfEmpty(0)
+                .Max();
+
+            // Generate next ID
+            int nextId = existingIds + 1;
+            return $"S{nextId:000}"; // Format as S001, S002, etc.
         }
 
         // GET: /Customers/Login
@@ -52,19 +88,19 @@ namespace IPhoneShop.Controllers
             return View();
         }
 
-        // POST: /Customers/Login  (Raw SQL Select)
+        // POST: /Customers/Login  (Updated to use Email instead of CustomerID)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(string customerId, string password)
+        public IActionResult Login(string email, string password)
         {
             var customer = _context.Customers
-                .FromSqlRaw("SELECT * FROM Customer WHERE CustomerID = {0} AND Password = {1}", customerId, password)
+                .FromSqlRaw("SELECT * FROM Customer WHERE Email = {0} AND Password = {1}", email, password)
                 .AsEnumerable() // materialize for EF Core 8 safety
                 .FirstOrDefault();
 
             if (customer == null)
             {
-                ViewBag.Error = "Invalid Customer ID or Password.";
+                ViewBag.Error = "Invalid email or password.";
                 return View();
             }
 

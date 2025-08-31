@@ -2,20 +2,150 @@
     ViewData["Title"] = "Register";
     Layout = "_Layout";
 }
-<h2>Register</h2>
 
-<form asp-action="Register" method="post">
-    @Html.AntiForgeryToken()
-    <div><label>Customer ID</label><br /><input type="text" name="customerId" maxlength="4" required /></div>
-    <div style="margin-top:8px;"><label>First Name</label><br /><input type="text" name="firstName" required /></div>
-    <div style="margin-top:8px;"><label>Last Name</label><br /><input type="text" name="lastName" required /></div>
-    <div style="margin-top:8px;"><label>Email</label><br /><input type="email" name="email" required /></div>
-    <div style="margin-top:8px;"><label>Password</label><br /><input type="password" name="password" required /></div>
-    <div style="margin-top:8px;"><label>Phone Number</label><br /><input type="text" name="phoneNumber" required /></div>
-    <div style="margin-top:12px;"><button class="btn" type="submit">Create Account</button></div>
-</form>
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-24">
+    <div class="max-w-4xl w-full">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div class="p-12">
+                <div class="max-w-2xl mx-auto">
+                    <!-- Header -->
+                    <div class="text-center mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+                        <p class="text-gray-600">Join iPhoneShop and get access to exclusive deals</p>
+                    </div>
 
-@if (ViewBag.Error != null)
-{
-    <p style="color:#b91c1c;margin-top:12px;">@ViewBag.Error</p>
-}
+                    <form asp-action="Register" method="post" class="space-y-6">
+                        @Html.AntiForgeryToken()
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- First Name -->
+                            <div class="animate-slide-up" style="animation-delay: 0.1s">
+                                <label for="firstName" class="block text-sm font-semibold text-gray-700 mb-2">First Name</label>
+                                <input type="text"
+                                       name="firstName"
+                                       id="firstName"
+                                       required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all duration-200 text-gray-900 placeholder-gray-500"
+                                       placeholder="John" />
+                            </div>
+
+                            <!-- Last Name -->
+                            <div class="animate-slide-up" style="animation-delay: 0.2s">
+                                <label for="lastName" class="block text-sm font-semibold text-gray-700 mb-2">Last Name</label>
+                                <input type="text"
+                                       name="lastName"
+                                       id="lastName"
+                                       required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all duration-200 text-gray-900 placeholder-gray-500"
+                                       placeholder="Doe" />
+                            </div>
+
+                            <!-- Email -->
+                            <div class="animate-slide-up" style="animation-delay: 0.3s">
+                                <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                                <input type="email"
+                                       name="email"
+                                       id="email"
+                                       required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all duration-200 text-gray-900 placeholder-gray-500"
+                                       placeholder="john.doe@example.com" />
+                            </div>
+
+                            <!-- Phone Number -->
+                            <div class="animate-slide-up" style="animation-delay: 0.4s">
+                                <label for="phoneNumber" class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+                                <input type="text"
+                                       name="phoneNumber"
+                                       id="phoneNumber"
+                                       required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all duration-200 text-gray-900 placeholder-gray-500"
+                                       placeholder="+65 9123 4567" />
+                            </div>
+
+                            <!-- Password -->
+                            <div class="md:col-span-2 animate-slide-up" style="animation-delay: 0.5s">
+                                <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                                <div class="relative">
+                                    <input type="password"
+                                           name="password"
+                                           id="password"
+                                           required
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all duration-200 text-gray-900 placeholder-gray-500"
+                                           placeholder="Create a secure password" />
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Must be at least 6 characters long</p>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="pt-4 animate-slide-up" style="animation-delay: 0.6s">
+                            <button type="submit"
+                                    class="w-full bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-lg hover:shadow-xl">
+                                Create Account
+                            </button>
+
+                            <div class="text-center mt-6">
+                                <span class="text-gray-600">Already have an account? </span>
+                                <a href="/Customers/Login"
+                                   class="text-brand-600 hover:text-brand-700 font-semibold transition-colors duration-200">
+                                    Sign In
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Error Message -->
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg animate-slide-up">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-red-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                </svg>
+                                <p class="text-red-700 font-medium">@ViewBag.Error</p>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Features -->
+                    <div class="mt-8 pt-8 border-t border-gray-200">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                            <div class="flex flex-col items-center">
+                                <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center mb-3">
+                                    <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold text-gray-900">Secure Account</h3>
+                                <p class="text-sm text-gray-600">Your data is protected with enterprise-grade security</p>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center mb-3">
+                                    <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold text-gray-900">Fast Delivery</h3>
+                                <p class="text-sm text-gray-600">Get your orders delivered quickly and safely</p>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center mb-3">
+                                    <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold text-gray-900">Best Deals</h3>
+                                <p class="text-sm text-gray-600">Access exclusive offers and member discounts</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

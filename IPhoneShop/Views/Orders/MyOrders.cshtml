@@ -3,55 +3,228 @@
     ViewData["Title"] = "My Orders";
     Layout = "_Layout";
 }
-<h2>My Orders</h2>
 
-@if (!Model.Any())
-{
-    <p>Your cart is empty. Go to <a href="/Products/Browse">Browse</a> to add items.</p>
-}
-else
-{
-    <table>
-        <thead>
-            <tr>
-                <th>OrderID</th>
-                <th>ProductID</th>
-                <th>Qty</th>
-                <th>Status</th>
-                <th>Order Date</th>
-                <th>Address</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var order in Model)
-            {
-                <tr>
-                    <td>@order.OrderId</td>
-                    <td>@order.ProductId</td>
-                    <td>@order.Quantity</td>
-                    <td>@order.Status</td>
-                    <td>@order.OrderDate</td>
-                    <td>@order.DeliveryAddress</td>
-                    <td>
+<div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">My Cart</h1>
+        <p class="text-gray-600">Manage your saved orders and checkout when ready</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <!-- Empty Cart State -->
+        <div class="bg-white rounded-2xl shadow-lg p-12 text-center animate-fade-in">
+            <div class="max-w-md mx-auto">
+                <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5.5M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Your cart is empty</h3>
+                <p class="text-gray-600 mb-6">Discover amazing iPhone deals and add them to your cart</p>
+                <a href="/Products/Browse"
+                   class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Browse Products
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Orders Table -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden animate-fade-in">
+            <!-- Table Header -->
+            <div class="bg-gray-50 px-4 py-4 border-b border-gray-200">
+                <div class="grid grid-cols-6 gap-3 font-semibold text-gray-700 text-sm">
+                    <div>Order ID</div>
+                    <div>Product ID</div>
+                    <div>Qty</div>
+                    <div>Status</div>
+                    <div>Address</div>
+                    <div class="text-center">Actions</div>
+                </div>
+            </div>
+
+            <!-- Table Body -->
+            <div class="divide-y divide-gray-200">
+                @foreach (var order in Model)
+                {
+                    <div class="px-4 py-4 hover:bg-gray-50 transition-colors duration-150">
+                        <div class="grid grid-cols-6 gap-3 items-center text-sm">
+                            <!-- Order ID -->
+                            <div class="font-mono text-gray-900 text-xs">#@order.OrderId</div>
+
+                            <!-- Product ID -->
+                            <div class="font-mono text-gray-600 text-xs">@order.ProductId</div>
+
+                            <!-- Quantity -->
+                            <div class="text-gray-900">@order.Quantity</div>
+
+                            <!-- Status -->
+                            <div>
+                                @if (order.Status == "Saved")
+                                {
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        Saved
+                                    </span>
+                                }
+                                else if (order.Status == "Confirmed")
+                                {
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        Confirmed
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        @order.Status
+                                    </span>
+                                }
+                            </div>
+
+                            <!-- Address -->
+                            <div class="text-gray-600 truncate text-xs" title="@order.DeliveryAddress">
+                                @order.DeliveryAddress
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="flex flex-col space-y-1">
+                                @if (order.Status == "Saved")
+                                {
+                                    <!-- Edit + Delete -->
+                                    <div class="flex space-x-1 mb-1">
+                                        <button onclick="toggleEdit(@order.OrderId)"
+                                                class="flex-1 px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-medium rounded transition-colors duration-200">
+                                            Edit
+                                        </button>
+                                        <a asp-action="Delete"
+                                           asp-route-orderId="@order.OrderId"
+                                           onclick="return confirm('Are you sure you want to delete this order?')"
+                                           class="flex-1 px-2 py-1 bg-red-100 hover:bg-red-200 text-red-700 text-xs font-medium rounded transition-colors duration-200 text-center">
+                                            Delete
+                                        </a>
+                                    </div>
+
+                                    <!-- Confirm + View -->
+                                    <div class="flex space-x-1">
+                                        <a asp-action="Confirm"
+                                           asp-route-orderId="@order.OrderId"
+                                           onclick="return confirm('Are you sure you want to confirm this order?')"
+                                           class="flex-1 px-2 py-1 bg-green-100 hover:bg-green-200 text-green-700 text-xs font-medium rounded transition-colors duration-200 text-center">
+                                            ✓ Confirm
+                                        </a>
+                                        <a asp-action="Details"
+                                           asp-route-orderId="@order.OrderId"
+                                           class="flex-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded transition-colors duration-200 text-center flex items-center justify-center">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                            </svg>
+                                            View
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <!-- Only View for non-saved -->
+                                    <a asp-action="Details"
+                                       asp-route-orderId="@order.OrderId"
+                                       class="w-full px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded transition-colors duration-200 text-center flex items-center justify-center">
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                        View
+                                    </a>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Hidden Edit Form -->
                         @if (order.Status == "Saved")
                         {
-                            <form class="inline" asp-action="Edit" method="post">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="orderId" value="@order.OrderId" />
-                                <input type="number" name="qty" value="@order.Quantity" min="1" style="width:80px" />
-                                <input type="text" name="address" value="@order.DeliveryAddress" style="width:240px" />
-                                <button class="btn" type="submit">Update</button>
-                            </form>
-                            <a class="btn" asp-action="Delete" asp-route-orderId="@order.OrderId">Delete</a>
+                            <div id="edit-form-@order.OrderId" class="hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <h4 class="text-sm font-semibold text-gray-700 mb-3">Edit Order #@order.OrderId</h4>
+                                <form asp-action="Edit" method="post" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="orderId" value="@order.OrderId" />
+
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-700 mb-1">Quantity</label>
+                                        <input type="number"
+                                               name="qty"
+                                               value="@order.Quantity"
+                                               min="1"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500" />
+                                    </div>
+
+                                    <div class="md:col-span-2">
+                                        <label class="block text-xs font-medium text-gray-700 mb-1">Delivery Address</label>
+                                        <input type="text"
+                                               name="address"
+                                               value="@order.DeliveryAddress"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                                               placeholder="Enter delivery address" />
+                                    </div>
+
+                                    <div class="md:col-span-3 flex justify-end space-x-2 pt-2">
+                                        <button type="button"
+                                                onclick="toggleEdit(@order.OrderId)"
+                                                class="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-medium rounded-lg transition-colors duration-200">
+                                            Cancel
+                                        </button>
+                                        <button type="submit"
+                                                class="px-3 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         }
-                        else
+                    </div>
+                }
+            </div>
+
+            <!-- Table Footer -->
+            <div class="bg-gray-50 px-4 py-4 border-t border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        Total: @Model.Count() item(s)
+                        • Saved: @Model.Count(o => o.Status == "Saved")
+                        • Confirmed: @Model.Count(o => o.Status == "Confirmed")
+                    </div>
+                    <div class="flex space-x-3">
+                        <!-- Bulk Confirm Button -->
+                        @if (Model.Any(o => o.Status == "Saved"))
                         {
-                            <a class="btn" asp-action="Details" asp-route-orderId="@order.OrderId">View</a>
+                            <a asp-action="ConfirmAll"
+                               onclick="return confirm('Are you sure you want to confirm all saved orders?')"
+                               class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                                Confirm All Saved Orders
+                            </a>
                         }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+                        <a href="/Products/Browse"
+                           class="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                            Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function toggleEdit(orderId) {
+        const editForm = document.getElementById('edit-form-' + orderId);
+        if (editForm.classList.contains('hidden')) {
+            editForm.classList.remove('hidden');
+        } else {
+            editForm.classList.add('hidden');
+        }
+    }
+</script>

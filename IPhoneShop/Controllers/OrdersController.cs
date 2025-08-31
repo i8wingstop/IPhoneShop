@@ -105,5 +105,39 @@ namespace IPhoneShop.Controllers
 
             return View(order);
         }
+
+        // GET: /Orders/Confirm/{orderId} - Confirm single saved order
+        [HttpGet]
+        public IActionResult Confirm(int orderId)
+        {
+            var custId = HttpContext.Session.GetString("CustomerID");
+            if (string.IsNullOrEmpty(custId))
+                return RedirectToAction("Login", "Customers");
+
+            // Update the order status from "Saved" to "Confirmed"
+            _context.Database.ExecuteSqlRaw(
+                "UPDATE Orders SET Status = 'Confirmed', OrderDate = GETDATE() WHERE OrderID = {0} AND CustomerID = {1} AND Status = 'Saved'",
+                orderId, custId
+            );
+
+            return RedirectToAction("MyOrders");
+        }
+
+        // GET: /Orders/ConfirmAll - Confirm all saved orders
+        [HttpGet]
+        public IActionResult ConfirmAll()
+        {
+            var custId = HttpContext.Session.GetString("CustomerID");
+            if (string.IsNullOrEmpty(custId))
+                return RedirectToAction("Login", "Customers");
+
+            // Update all saved orders to confirmed
+            _context.Database.ExecuteSqlRaw(
+                "UPDATE Orders SET Status = 'Confirmed', OrderDate = GETDATE() WHERE CustomerID = {0} AND Status = 'Saved'",
+                custId
+            );
+
+            return RedirectToAction("MyOrders");
+        }
     }
 }

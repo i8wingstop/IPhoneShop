@@ -1,137 +1,127 @@
 ﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - IPhoneShop</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="~/css/site.css" />
-    <style>
-        body {
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            margin: 0;
-            background: #f7f7f8;
-            color: #111;
-        }
-
-        header {
-            background: #fff;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-        }
-
-        nav {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 12px 16px;
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-
-            nav a {
-                text-decoration: none;
-                color: #111;
-                padding: 6px 10px;
-                border-radius: 8px;
-            }
-
-                nav a:hover {
-                    background: #f1f5f9;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand': {
+                            50: '#f0f9ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
                 }
-
-        .container {
-            max-width: 1100px;
-            margin: 24px auto;
-            padding: 0 16px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #e5e7eb;
-            text-align: left;
-        }
-
-        th {
-            background: #f8fafc;
-            font-weight: 600;
-        }
-
-        form.inline {
-            display: inline;
-        }
-
-        .btn {
-            border: 1px solid #e5e7eb;
-            background: #fff;
-            border-radius: 10px;
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-
-            .btn:hover {
-                background: #f8fafc;
             }
-
-        input, select {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 8px 10px;
         }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 16px;
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-
-        .card {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
         }
-
-        .price {
-            font-weight: 700;
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
     </style>
 </head>
-<body>
-    <header>
-        <nav>
-            <a href="/Products/Browse">Browse</a>
-            @{
-                var cid = HttpContextAccessor.HttpContext?.Session.GetString("CustomerID") ?? "";
-                if (string.IsNullOrEmpty(cid))
-                {
-                    <a href="/Customers/Login">Login</a>
-                    <a href="/Customers/Register">Register</a>
-                }
-                else
-                {
-                    <a href="/Orders/MyOrders">Cart</a>
-                    <a href="/Customers/Logout">Logout</a>
-                }
-            }
+<body class="font-sans bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <!-- Navigation -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="/Products/Browse" class="text-2xl font-bold bg-gradient-to-r from-brand-600 to-purple-600 bg-clip-text text-transparent">
+                        iPhoneShop
+                    </a>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="flex items-center space-x-1">
+                    <a href="/Products/Browse" 
+                       class="px-4 py-2 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-white/50 transition-all duration-200 font-medium">
+                        Browse
+                    </a>
+                    
+                    @{
+                        var cid = HttpContextAccessor.HttpContext?.Session.GetString("CustomerID") ?? "";
+                        if (string.IsNullOrEmpty(cid))
+                        {
+                            <a href="/Customers/Login" 
+                               class="px-4 py-2 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-white/50 transition-all duration-200 font-medium">
+                                Login
+                            </a>
+                            <a href="/Customers/Register" 
+                               class="px-6 py-2 rounded-lg bg-brand-600 text-white hover:bg-brand-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl">
+                                Register
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="/Orders/MyOrders" 
+                               class="px-4 py-2 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-white/50 transition-all duration-200 font-medium flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5.5M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6"></path>
+                                </svg>
+                                Cart
+                            </a>
+                            <a href="/Customers/Logout" 
+                               class="px-4 py-2 rounded-lg text-gray-700 hover:text-red-600 hover:bg-white/50 transition-all duration-200 font-medium">
+                                Logout
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
         </nav>
     </header>
-    <div class="container">
+
+    <!-- Main Content -->
+    <main class="flex-1 animate-fade-in">
         @RenderBody()
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-gray-200 bg-white/80 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center text-gray-600">
+                <p>&copy; 2025 iPhoneShop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
