@@ -45,17 +45,20 @@
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
+
         .glass-effect {
             backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.95);
         }
+
         .card-hover {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
+
+            .card-hover:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
     </style>
 </head>
 <body class="font-sans bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
@@ -69,37 +72,37 @@
                         iPhoneShop
                     </a>
                 </div>
-                
+
                 <!-- Navigation Links -->
                 <div class="flex items-center space-x-1">
-                    <a href="/Products/Browse" 
+                    <a href="/Products/Browse"
                        class="px-4 py-2 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-white/50 transition-all duration-200 font-medium">
                         Browse
                     </a>
-                    
+
                     @{
                         var cid = HttpContextAccessor.HttpContext?.Session.GetString("CustomerID") ?? "";
                         if (string.IsNullOrEmpty(cid))
                         {
-                            <a href="/Customers/Login" 
+                            <a href="/Customers/Login"
                                class="px-4 py-2 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-white/50 transition-all duration-200 font-medium">
                                 Login
                             </a>
-                            <a href="/Customers/Register" 
+                            <a href="/Customers/Register"
                                class="px-6 py-2 rounded-lg bg-brand-600 text-white hover:bg-brand-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl">
                                 Register
                             </a>
                         }
                         else
                         {
-                            <a href="/Orders/MyOrders" 
+                            <a href="/Orders/MyOrders"
                                class="px-4 py-2 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-white/50 transition-all duration-200 font-medium flex items-center">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5.5M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6"></path>
                                 </svg>
                                 Cart
                             </a>
-                            <a href="/Customers/Logout" 
+                            <a href="/Customers/Logout"
                                class="px-4 py-2 rounded-lg text-gray-700 hover:text-red-600 hover:bg-white/50 transition-all duration-200 font-medium">
                                 Logout
                             </a>
